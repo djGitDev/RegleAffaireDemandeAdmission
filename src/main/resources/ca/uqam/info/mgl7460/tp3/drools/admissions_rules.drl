@@ -1,0 +1,26 @@
+package ca.uqam.info.mgl7460.tp3.drools;
+
+unit AdmissionsRuleUnitData;
+
+import ca.uqam.info.mgl7460.tp3.types.LibelleDecision
+import ca.uqam.info.mgl7460.tp3.types.MotifRefus
+import ca.uqam.info.mgl7460.tp3.types.DocumentAdmission
+import ca.uqam.info.mgl7460.tp3.types.StatutVerificationDocument
+import ca.uqam.info.mgl7460.tp3.types.CritereAdmission
+
+rule "refuse demande si moyenne base admission inférieure aux exigences des criteres admission"
+when
+then
+end
+
+rule "refuse demande si base admission CEGEP et cote R non fournie"
+when
+then
+end
+
+rule "refuse demande si document frauduleux"
+when 
+then
+end
+
+// à compléter
