@@ -1,0 +1,9 @@
+maven_test:
+  image: maven:3.8.5-jdk-11  # Use the appropriate Maven and JDK version
+  stage: test
+  script:
+    - mvn clean test
+  artifacts:
+    when: always
+    reports:
+      junit: target/surefire-reports/*.xml  

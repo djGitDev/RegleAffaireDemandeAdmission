@@ -10,8 +10,6 @@ import org.junit.jupiter.api.Assertions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import static java.util.stream.Collectors.toList;
-
 public class RuleTest {
 
     static final Logger LOG = LoggerFactory.getLogger(RuleTest.class);

@@ -1,10 +1,6 @@
 package ca.uqam.info.mgl7460.tp3.impl;
 
-import ca.uqam.info.mgl7460.tp3.types.DemandeAdmission;
 import ca.uqam.info.mgl7460.tp3.types.Etudiant;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class EtudiantImpl implements Etudiant {
 

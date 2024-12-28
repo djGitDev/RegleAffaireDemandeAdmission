@@ -1,13 +1,10 @@
 package ca.uqam.info.mgl7460.tp3.drools;
 
-import org.drools.ruleunits.api.RuleUnitProvider;
-
-import java.util.List;
-
 import org.drools.ruleunits.api.RuleUnitInstance;
-import org.junit.jupiter.api.Test;
+import org.drools.ruleunits.api.RuleUnitProvider;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -35,30 +32,35 @@ public class TestReglesAdmission {
 
         try {
             LOG.info("Insérer une demande d'admission avec base d'admission CEGEP sans cote R");
-            DemandeAdmission demandeBaseCEGEPSansCoteR = TestHarness.creerDemandeRefuseeBaseCEGEPSansCoteR();
+            DemandeAdmission demandeBaseCEGEPSansCoteR =
+                    TestHarness.creerDemandeRefuseeBaseCEGEPSansCoteR();
             admissionRuleUnitData.getDemandesAdmission().add(demandeBaseCEGEPSansCoteR);
-            
+
             LOG.info("Exécuter les règles sur une demande d'admission avec base d'admission CEGEP sans cote R");
-            moteurAdmissions.fire();
-            DecisionAdmission decisionBaseCEGEPSansCoteR = demandeBaseCEGEPSansCoteR.getDecisionAdmission();
-            Assertions.assertEquals(LibelleDecision.RefusMotive,decisionBaseCEGEPSansCoteR.getDecision());
-            Assertions.assertEquals(MotifRefus.DossierIncomplet, decisionBaseCEGEPSansCoteR.getMotifRefus());
+            int i = moteurAdmissions.fire();
+            LOG.info("    " + i);
+            DecisionAdmission decisionBaseCEGEPSansCoteR =
+                    demandeBaseCEGEPSansCoteR.getDecisionAdmission();
+            Assertions.assertEquals(LibelleDecision.RefusMotive, decisionBaseCEGEPSansCoteR.getDecision());
+            Assertions.assertEquals(MotifRefus.DossierIncomplet,
+                    decisionBaseCEGEPSansCoteR.getMotifRefus());
         } finally {
             moteurAdmissions.close();
         }
     }
+
     @Test
     public void testDemandeDocumentFrauduleux() {
         try {
             LOG.info("Insérer une demande d'admission frauduleuse");
 
-            DemandeAdmission demandeFrauduleuse = TestHarness.creerDemandeFrauduleuse();            
+            DemandeAdmission demandeFrauduleuse = TestHarness.creerDemandeFrauduleuse();
             admissionRuleUnitData.getDemandesAdmission().add(demandeFrauduleuse);
-            
+
             LOG.info("Exécuter les règles sur demande d'admission frauduleuse");
             moteurAdmissions.fire();
             DecisionAdmission frauduleuse = demandeFrauduleuse.getDecisionAdmission();
-            Assertions.assertEquals(LibelleDecision.RefusMotive,frauduleuse.getDecision());
+            Assertions.assertEquals(LibelleDecision.RefusMotive, frauduleuse.getDecision());
 
         } finally {
             moteurAdmissions.close();
@@ -70,14 +72,16 @@ public class TestReglesAdmission {
         try {
             LOG.info("Insérer une demande d'admission dossier vide");
 
-            DemandeAdmission demandeDossierVide = TestHarness.creerDemandeDossierVide();            
+            DemandeAdmission demandeDossierVide = TestHarness.creerDemandeDossierVide();
             admissionRuleUnitData.getDemandesAdmission().add(demandeDossierVide);
-            
+
             LOG.info("Exécuter les règles sur demande d'admission avec dossier vide");
             moteurAdmissions.fire();
-            DecisionAdmission decisionDossierVide = demandeDossierVide.getDecisionAdmission();
-            Assertions.assertEquals(LibelleDecision.RefusMotive,decisionDossierVide.getDecision());
-            Assertions.assertEquals(MotifRefus.DossierIncomplet, decisionDossierVide.getMotifRefus());
+            DecisionAdmission decisionDossierVide =
+                    demandeDossierVide.getDecisionAdmission();
+            Assertions.assertEquals(LibelleDecision.RefusMotive, decisionDossierVide.getDecision());
+            Assertions.assertEquals(MotifRefus.DossierIncomplet,
+                    decisionDossierVide.getMotifRefus());
 
         } finally {
             moteurAdmissions.close();
@@ -89,14 +93,17 @@ public class TestReglesAdmission {
         try {
             LOG.info("Insérer une demande d'admission mauvaise base d'admission");
 
-            DemandeAdmission demandeMauvaiseBaseAdmission = TestHarness.creerDemandeMauvaiseBaseAdmission();            
+            DemandeAdmission demandeMauvaiseBaseAdmission =
+                    TestHarness.creerDemandeMauvaiseBaseAdmission();
             admissionRuleUnitData.getDemandesAdmission().add(demandeMauvaiseBaseAdmission);
-            
+
             LOG.info("Exécuter les règles sur demande d'admission avec mauvaise base d'admission");
             moteurAdmissions.fire();
-            DecisionAdmission decisionMauvaiseBaseAdmission = demandeMauvaiseBaseAdmission.getDecisionAdmission();
-            Assertions.assertEquals(LibelleDecision.RefusMotive,decisionMauvaiseBaseAdmission.getDecision());
-            Assertions.assertEquals(MotifRefus.RefusPourAutreMotif, decisionMauvaiseBaseAdmission.getMotifRefus());
+            DecisionAdmission decisionMauvaiseBaseAdmission =
+                    demandeMauvaiseBaseAdmission.getDecisionAdmission();
+            Assertions.assertEquals(LibelleDecision.RefusMotive, decisionMauvaiseBaseAdmission.getDecision());
+            Assertions.assertEquals(MotifRefus.RefusPourAutreMotif,
+                    decisionMauvaiseBaseAdmission.getMotifRefus());
             Assertions.assertTrue(decisionMauvaiseBaseAdmission.getCommentairesDecision().contains("Ce programme n'admet pas sur la base"));
         } finally {
             moteurAdmissions.close();
@@ -108,14 +115,17 @@ public class TestReglesAdmission {
         try {
             LOG.info("Insérer une demande d'admission base experience sans attestation d'emploi");
 
-            DemandeAdmission demandeBaseExperienceSansPreuve = TestHarness.creerDemandeBaseExperienceSansPreuve();            
+            DemandeAdmission demandeBaseExperienceSansPreuve =
+                    TestHarness.creerDemandeBaseExperienceSansPreuve();
             admissionRuleUnitData.getDemandesAdmission().add(demandeBaseExperienceSansPreuve);
-            
+
             LOG.info("Exécuter les règles sur demande d'admission base experience sans attestation d'emploi");
             moteurAdmissions.fire();
-            DecisionAdmission decisionBaseExperienceSansPreuve = demandeBaseExperienceSansPreuve.getDecisionAdmission();
-            Assertions.assertEquals(LibelleDecision.RefusMotive,decisionBaseExperienceSansPreuve.getDecision());
-            Assertions.assertEquals(MotifRefus.DossierIncomplet, decisionBaseExperienceSansPreuve.getMotifRefus());
+            DecisionAdmission decisionBaseExperienceSansPreuve =
+                    demandeBaseExperienceSansPreuve.getDecisionAdmission();
+            Assertions.assertEquals(LibelleDecision.RefusMotive, decisionBaseExperienceSansPreuve.getDecision());
+            Assertions.assertEquals(MotifRefus.DossierIncomplet,
+                    decisionBaseExperienceSansPreuve.getMotifRefus());
         } finally {
             moteurAdmissions.close();
         }
@@ -125,15 +135,20 @@ public class TestReglesAdmission {
     public void testDemandeMoyennePlusfaibleCriteresAdmission() {
         try {
             LOG.info("Insérer une demande d'admission avec moyenne plus faible que les critères d'admission");
-
-            DemandeAdmission demandeMoyennePlusfaibleCriteresAdmission = TestHarness.creerDemandeMoyennePlusfaibleQueCriteresAdmission();            
+            DemandeAdmission demandeMoyennePlusfaibleCriteresAdmission = TestHarness
+                    .creerDemandeMoyennePlusfaibleQueCriteresAdmission();
             admissionRuleUnitData.getDemandesAdmission().add(demandeMoyennePlusfaibleCriteresAdmission);
-            
-            LOG.info("Exécuter les règles sur demande d'admission avec moyenne plus faible que les critères d'admission");
-            moteurAdmissions.fire();
-            DecisionAdmission decisiondemandeMoyennePlusfaibleCriteresAdmission = demandeMoyennePlusfaibleCriteresAdmission.getDecisionAdmission();
-            Assertions.assertEquals(LibelleDecision.RefusMotive,decisiondemandeMoyennePlusfaibleCriteresAdmission.getDecision());
-            Assertions.assertEquals(MotifRefus.ResultatsScolairesTropFaibles, decisiondemandeMoyennePlusfaibleCriteresAdmission.getMotifRefus());
+
+            LOG.info(
+                    "Exécuter les règles sur demande d'admission avec moyenne plus faible que les critères d'admission");
+            int i = moteurAdmissions.fire();
+            LOG.info("    " + i);
+            DecisionAdmission decisiondemandeMoyennePlusfaibleCriteresAdmission = demandeMoyennePlusfaibleCriteresAdmission
+                    .getDecisionAdmission();
+            Assertions.assertEquals(LibelleDecision.RefusMotive,
+                    decisiondemandeMoyennePlusfaibleCriteresAdmission.getDecision());
+            Assertions.assertEquals(MotifRefus.ResultatsScolairesTropFaibles,
+                    decisiondemandeMoyennePlusfaibleCriteresAdmission.getMotifRefus());
         } finally {
             moteurAdmissions.close();
         }
@@ -144,18 +159,18 @@ public class TestReglesAdmission {
         try {
             LOG.info("Insérer une demande d'admission qui sera acceptée");
 
-            DemandeAdmission demandeAcceptee = TestHarness.creerDemandeAdmissionAcceptee();            
+            DemandeAdmission demandeAcceptee =
+                    TestHarness.creerDemandeAdmissionAcceptee();
             admissionRuleUnitData.getDemandesAdmission().add(demandeAcceptee);
-            
+
             LOG.info("Exécuter les règles sur demande d'admission qui devrait etre acceptée");
             moteurAdmissions.fire();
-            DecisionAdmission acceptationDefinitive = demandeAcceptee.getDecisionAdmission();
-            Assertions.assertEquals(LibelleDecision.AdmissionDefinitive,acceptationDefinitive.getDecision());
+            DecisionAdmission acceptationDefinitive =
+                    demandeAcceptee.getDecisionAdmission();
+            Assertions.assertEquals(LibelleDecision.AdmissionDefinitive, acceptationDefinitive.getDecision());
             Assertions.assertTrue(acceptationDefinitive.getCommentairesDecision().contains("Félicitations!"));
         } finally {
             moteurAdmissions.close();
         }
     }
-
-
 }

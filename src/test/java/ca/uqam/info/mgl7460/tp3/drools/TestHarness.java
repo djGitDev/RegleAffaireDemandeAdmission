@@ -3,17 +3,7 @@ package ca.uqam.info.mgl7460.tp3.drools;
 import java.util.Calendar;
 import java.util.Date;
 
-import ca.uqam.info.mgl7460.tp3.types.BaseAdmission;
-import ca.uqam.info.mgl7460.tp3.types.CritereAdmission;
-import ca.uqam.info.mgl7460.tp3.types.DemandeAdmission;
-import ca.uqam.info.mgl7460.tp3.types.DocumentAdmission;
-import ca.uqam.info.mgl7460.tp3.types.Etudiant;
-import ca.uqam.info.mgl7460.tp3.types.FabriqueGestionAdmissions;
-import ca.uqam.info.mgl7460.tp3.types.LibelleDomaine;
-import ca.uqam.info.mgl7460.tp3.types.Programme;
-import ca.uqam.info.mgl7460.tp3.types.SessionAdmission;
-import ca.uqam.info.mgl7460.tp3.types.StatutVerificationDocument;
-import ca.uqam.info.mgl7460.tp3.types.TypeDocumentAdmission;
+import ca.uqam.info.mgl7460.tp3.types.*;
 
 public class TestHarness {
 

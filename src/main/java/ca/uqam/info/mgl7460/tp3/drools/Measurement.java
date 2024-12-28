@@ -1,6 +1,7 @@
 
 package ca.uqam.info.mgl7460.tp3.drools;
 
+
 public class Measurement {
     private String id;
     private String val;

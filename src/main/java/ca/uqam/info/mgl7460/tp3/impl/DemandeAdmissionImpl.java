@@ -1,10 +1,21 @@
 package ca.uqam.info.mgl7460.tp3.impl;
 
-import ca.uqam.info.mgl7460.tp3.types.*;
-
 import java.util.Date;
 
+import ca.uqam.info.mgl7460.tp3.types.BaseAdmission;
+import ca.uqam.info.mgl7460.tp3.types.ConditionAdmission;
+import ca.uqam.info.mgl7460.tp3.types.DecisionAdmission;
+import ca.uqam.info.mgl7460.tp3.types.DecisionNonConforme;
+import ca.uqam.info.mgl7460.tp3.types.DemandeAdmission;
+import ca.uqam.info.mgl7460.tp3.types.DocumentAdmission;
+import ca.uqam.info.mgl7460.tp3.types.DossierAdmission;
+import ca.uqam.info.mgl7460.tp3.types.Etudiant;
+import ca.uqam.info.mgl7460.tp3.types.FabriqueGestionAdmissions;
 import static ca.uqam.info.mgl7460.tp3.types.FabriqueGestionAdmissions.getSingleton;
+import ca.uqam.info.mgl7460.tp3.types.LibelleDecision;
+import ca.uqam.info.mgl7460.tp3.types.MotifRefus;
+import ca.uqam.info.mgl7460.tp3.types.Programme;
+import ca.uqam.info.mgl7460.tp3.types.SessionAdmission;
 
 public class DemandeAdmissionImpl implements DemandeAdmission {
 
@@ -13,13 +24,14 @@ public class DemandeAdmissionImpl implements DemandeAdmission {
     private SessionAdmission sessionAdmission;
     private Date dateDemandeAdmission;
     private BaseAdmission baseAdmission;
-    private int coteR;
+    private int coteR ;
     private float moyennePourBaseAdmission = 0f;
     private DossierAdmission dossierAdmission ;
     private DecisionAdmission decisionAdmission;
 
 
     public DemandeAdmissionImpl(Etudiant etudiant,Programme programme, SessionAdmission session) {
+        super();
         this.candidat = etudiant;
         FabriqueGestionAdmissions fabrique = getSingleton();
         this.dossierAdmission = fabrique.creerDossierAdmission(etudiant);
@@ -27,7 +39,6 @@ public class DemandeAdmissionImpl implements DemandeAdmission {
         this.programme = programme;
         this.sessionAdmission = session;
         this.dateDemandeAdmission = new Date();
-        this.coteR = 0;
     }
 
 
@@ -138,4 +149,6 @@ public class DemandeAdmissionImpl implements DemandeAdmission {
         decisionAdmission.setMotifRefus(motif);
         return decisionAdmission;
     }
+    
+
 }

@@ -20,6 +20,8 @@ public class DecisionAdmissionImpl implements DecisionAdmission {
     public DecisionAdmissionImpl(LibelleDecision libelleDecision){
         this.libelleDecision = libelleDecision;
         dateDecision = new Date();
+        if(libelleDecision != LibelleDecision.RefusMotive)
+            isConforme = true;
     }
 
     @Override

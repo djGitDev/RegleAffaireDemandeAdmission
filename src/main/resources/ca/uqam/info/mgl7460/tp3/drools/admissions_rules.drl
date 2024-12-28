@@ -2,25 +2,90 @@ package ca.uqam.info.mgl7460.tp3.drools;
 
 unit AdmissionsRuleUnitData;
 
+import ca.uqam.info.mgl7460.tp3.types.CritereAdmission
 import ca.uqam.info.mgl7460.tp3.types.LibelleDecision
 import ca.uqam.info.mgl7460.tp3.types.MotifRefus
-import ca.uqam.info.mgl7460.tp3.types.DocumentAdmission
+import ca.uqam.info.mgl7460.tp3.types.BaseAdmission
 import ca.uqam.info.mgl7460.tp3.types.StatutVerificationDocument
-import ca.uqam.info.mgl7460.tp3.types.CritereAdmission
+import ca.uqam.info.mgl7460.tp3.types.TypeDocumentAdmission
+
+import ca.uqam.info.mgl7460.tp3.types.DocumentAdmission
+
+
+
 
 rule "refuse demande si moyenne base admission inférieure aux exigences des criteres admission"
 when
+     $demande :/demandesAdmission[  $criteres : programme.criteresAdmission, $m :moyennePourBaseAdmission]
+     not CritereAdmission(moyenneMinimale <= $m) from $criteres
 then
+    $demande.setLibelleDecisionAdmission(LibelleDecision.RefusMotive);
+    $demande.getDecisionAdmission().setDecisionConforme(false);
+    $demande.getDecisionAdmission().setMotifRefus(MotifRefus.ResultatsScolairesTropFaibles);
+    update($demande);
 end
 
 rule "refuse demande si base admission CEGEP et cote R non fournie"
 when
+    $demande :/demandesAdmission[ coteR == 0,  baseAdmission ==  BaseAdmission.CEGEP]
 then
+    $demande.setLibelleDecisionAdmission(LibelleDecision.RefusMotive);
+    $demande.getDecisionAdmission().setDecisionConforme(false);
+    $demande.getDecisionAdmission().setMotifRefus(MotifRefus.DossierIncomplet);
+    update($demande);
 end
 
 rule "refuse demande si document frauduleux"
-when 
+when
+    $demande :/demandesAdmission[ $documents : dossierAdmission.listeDocumentAdmission ]
+    DocumentAdmission( statutVerificationDocument == StatutVerificationDocument.Frauduleux) from $documents
 then
+    $demande.setLibelleDecisionAdmission(LibelleDecision.RefusMotive);
+    $demande.getDecisionAdmission().setDecisionConforme(false);
+    update($demande);
 end
 
-// à compléter
+rule "refuse demande si dossier vide "
+when
+    $demande :/demandesAdmission[  dossierAdmission.listeDocumentAdmission.size == 0]
+then
+    $demande.setLibelleDecisionAdmission(LibelleDecision.RefusMotive);
+    $demande.getDecisionAdmission().setDecisionConforme(false);
+    $demande.getDecisionAdmission().setMotifRefus(MotifRefus.DossierIncomplet);
+    update($demande);
+end
+
+rule "refuse demande si la demande d'admission est basée sur experience sans preuve "
+when
+    $demande :/demandesAdmission[baseAdmission == BaseAdmission.Experience ,$documents : dossierAdmission.listeDocumentAdmission ]
+    DocumentAdmission( typeDocumentAdmission != TypeDocumentAdmission.AttestationEmploi) from $documents
+then
+    $demande.setLibelleDecisionAdmission(LibelleDecision.RefusMotive);
+    $demande.getDecisionAdmission().setDecisionConforme(false);
+    $demande.getDecisionAdmission().setMotifRefus(MotifRefus.DossierIncomplet);
+    update($demande);
+end
+
+rule "refuse demande si base admission ne correspont pas aux bases d'admissions des criteres d'admissions "
+when
+    $demande :/demandesAdmission[  $baseAdmission : baseAdmission, $criteres : programme.criteresAdmission]
+    not CritereAdmission(baseAdmission == $baseAdmission) from $criteres
+
+then
+    $demande.setLibelleDecisionAdmission(LibelleDecision.RefusMotive);
+    $demande.getDecisionAdmission().setMotifRefus(MotifRefus.RefusPourAutreMotif);
+    $demande.getDecisionAdmission().setDecisionConforme(false);
+    $demande.getDecisionAdmission().setCommentairesDecision("Ce programme n'admet pas sur la base");
+    update($demande);
+end
+
+rule "accepte demande qui respecte tous les regles d'affaire "
+when
+    $demande :/demandesAdmission[ decisionAdmission.isDecisionConforme  == true ]
+
+then
+    $demande.setLibelleDecisionAdmission(LibelleDecision.AdmissionDefinitive);
+    $demande.getDecisionAdmission().setCommentairesDecision("Félicitations!");
+end
+
+

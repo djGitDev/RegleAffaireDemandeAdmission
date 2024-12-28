@@ -46,9 +46,9 @@ public class DefinitionEtapesScenariosCucumber {
 
     @Then("je devrais avoir un refus motive avec dossier incomplet")
     public void je_devrais_avoir_un_refus_motive_avec_dossier_incomplet() {
-        DecisionAdmission decisionDossierVide = demandeAdmission.getDecisionAdmission();
-        Assertions.assertEquals(LibelleDecision.RefusMotive,decisionDossierVide.getDecision());
-        Assertions.assertEquals(MotifRefus.DossierIncomplet, decisionDossierVide.getMotifRefus());
+        DecisionAdmission decisionDossier = demandeAdmission.getDecisionAdmission();
+        Assertions.assertEquals(LibelleDecision.RefusMotive,decisionDossier.getDecision());
+        Assertions.assertEquals(MotifRefus.DossierIncomplet, decisionDossier.getMotifRefus());
     }
 
     @Given("une demande admission sur base experience sans attestation emploi")
@@ -64,9 +64,61 @@ public class DefinitionEtapesScenariosCucumber {
     }
     @Then("je devrais avoir un refus motive avec motif dossier incomplet")
     public void je_devrais_avoir_un_refus_motive_avec_motif_dossier_incomplet() {
-        DecisionAdmission decisionDossierVide = demandeAdmission.getDecisionAdmission();
-        Assertions.assertEquals(LibelleDecision.RefusMotive,decisionDossierVide.getDecision());
-        Assertions.assertEquals(MotifRefus.DossierIncomplet, decisionDossierVide.getMotifRefus());
+        DecisionAdmission decisionDossier = demandeAdmission.getDecisionAdmission();
+        Assertions.assertEquals(LibelleDecision.RefusMotive,decisionDossier.getDecision());
+        Assertions.assertEquals(MotifRefus.DossierIncomplet, decisionDossier.getMotifRefus());
+    }
+
+    @Given("une demande admission sur base admission CEGEP et cote R non fournie")
+    public void une_demande_admission_sur_base_cegep_sans_cotR() {
+        demandeAdmission = TestHarness.creerDemandeRefuseeBaseCEGEPSansCoteR();
+    }
+
+    @Given("une demande admission sur base admission qui correspont pas aux bases d'admissions des criteres d'admissions")
+    public void une_demande_admission_sur_base_admission_sans_correspendance() {
+        demandeAdmission = TestHarness.creerDemandeMauvaiseBaseAdmission();
+    }
+
+
+    @Then("je devrais avoir un refus motive avec motif refus pour autre motif")
+    public void je_devrais_avoir_un_refus_motive_avec_refus_autre_motif() {
+        DecisionAdmission decisionDossier = demandeAdmission.getDecisionAdmission();
+        Assertions.assertEquals(LibelleDecision.RefusMotive,decisionDossier.getDecision());
+        Assertions.assertEquals(MotifRefus.RefusPourAutreMotif, decisionDossier.getMotifRefus());
+    }
+
+    @Given("une demande admission avec moyenne base admission inférieure aux exigences des criteres admission")
+    public void une_demande_admission_avec_moyenne_basse_inferieure_aux_exigences_des_criteres_admission() {
+        demandeAdmission = TestHarness.creerDemandeMoyennePlusfaibleQueCriteresAdmission();
+    }
+
+    @Then("je devrais avoir un refus motive avec motif resultat scolaire trop faible")
+    public void je_devrais_avoir_un_refus_motive_avec_resultat_scolaire_faible() {
+        DecisionAdmission decisionDossier = demandeAdmission.getDecisionAdmission();
+        Assertions.assertEquals(LibelleDecision.RefusMotive,decisionDossier.getDecision());
+        Assertions.assertEquals(MotifRefus.ResultatsScolairesTropFaibles, decisionDossier.getMotifRefus());
+    }
+
+    @Given("une demande admission avec document frauduleux")
+    public void une_demande_admission_avec_document_frauduleux() {
+        demandeAdmission = TestHarness.creerDemandeFrauduleuse();
+    }
+
+    @Then("je devrais avoir un refus motive")
+    public void je_devrais_avoir_un_refus_motive() {
+        DecisionAdmission decisionDossier = demandeAdmission.getDecisionAdmission();
+        Assertions.assertEquals(LibelleDecision.RefusMotive,decisionDossier.getDecision());
+    }
+
+    @Given("une demande admission qui respecte tous les regles d'affaire")
+    public void une_demande_admission_admissible() {
+        demandeAdmission = TestHarness.creerDemandeAdmissionAcceptee();
+    }
+
+    @Then("je devrais avoir une admission definitive")
+    public void je_devrais_avoir_une_admission() {
+        DecisionAdmission decisionDossier = demandeAdmission.getDecisionAdmission();
+        Assertions.assertEquals(LibelleDecision.AdmissionDefinitive,decisionDossier.getDecision());
     }
     
 }
